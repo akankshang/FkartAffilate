@@ -29,4 +29,22 @@ namespace OldAPI.Models
         [StringLength(50)]
         public string Name { get; set; }
     }
+
+    public class APIResponse
+    {
+        public string Message { get; set; }
+        public string Status { get; set; }
+    }
+
+    public class LoginRequest
+    {
+        
+
+    }
+
+    public class LoginResponse : APIResponse
+    {
+
+        public User_Session UserSession { get; set; }
+    }
 }
