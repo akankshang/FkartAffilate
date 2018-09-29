@@ -38,8 +38,10 @@ namespace OldAPI.Models
 
     public class LoginRequest
     {
-        
-
+        public string Ip_Address { get; set; }
+		public string Device_Id { get; set; }
+		public string Email { get; set; }
+		public string Password { get; set; }
     }
 
     public class LoginResponse : APIResponse
@@ -47,4 +49,35 @@ namespace OldAPI.Models
 
         public User_Session UserSession { get; set; }
     }
+	public class ForgotPassword
+	{
+		public string Email { get; set; }
+	}
+	public class ChangePassword : ForgotPassword
+	{
+        public string old_Password { get; set; }
+		public string New_Password { get; set; }
+		public string Confirm_Password { get; set; }
+	}
+	public class Register : ForgotPassword
+	{
+		public string Full_Name { get; set; }
+		public string Password { get; set; }
+	}
+	
+	public class GetConfigRequest
+	{
+		public string Lookup_type { get; set; }
+		public string Login_key { get; set; }
+	}
+	public class Response : APIResponse
+	{
+		public string Lookup_Name { get; set; }
+		public string Lookup_Value { get; set; }
+	}
+	public class PostConfig : Response
+	{
+		public string Token_key { get; set; }
+		public string Lookup_Type { get; set; }
+	}
 }
