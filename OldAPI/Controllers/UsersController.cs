@@ -17,7 +17,7 @@ namespace OldAPI.Controllers
         private ApplicationDBContext db = new ApplicationDBContext();
 
         public LoginResponse DoLogin(LoginRequest login)
-        {
+        { 
             LoginResponse objResponse = new LoginResponse();
             if(login != null)
             {
