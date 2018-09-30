@@ -51,11 +51,16 @@ namespace OldAPI.Controllers
                     objResponse.Status = "1";
 
                 }
+                else
+                {
+                    objResponse.Message = "Login object is null. Please send valid API request.";
+                    objResponse.Status = "0";
+                }
 
             }
             else
             {
-                objResponse.Message = "Login object is null. Please send valid API request.";
+                objResponse.Message = "Object is null.";
                 objResponse.Status = "0";
             }
             return objResponse;
@@ -86,11 +91,16 @@ namespace OldAPI.Controllers
                     objResponse.Status = "1";
 
                 }
+                else
+                {
+                    objResponse.Message = "Email is already registered, Please login";
+                    objResponse.Status = "0";
+                }
 
             }
             else
             {
-                objResponse.Message = "Email is already registered, Please login";
+                objResponse.Message = "Object is null";
                 objResponse.Status = "0";
             }
             return objResponse;
