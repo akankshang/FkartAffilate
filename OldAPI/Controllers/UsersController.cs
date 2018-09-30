@@ -32,7 +32,22 @@ namespace OldAPI.Controllers
                 var objuser = db.Users.FirstOrDefault(x => x.Email == login.Email && x.Password == login.Password);
                 if (objuser != null)
                 {
+                    User_Session objSession = new User_Session();
+                    objSession.User_ID = objuser.User_ID;
+                    objSession.Session_GUID = (new Guid()).ToString();
+                    objSession.Token_Key = objSession.Session_GUID;
+                    objSession.Issued_On = DateTime.Now;
+                    objSession.IP_Address = login.Ip_Address;
+                   // objSession.Expired = false;//Fix
+                    objSession.Expired_On = DateTime.Now.AddDays(1);
 
+                    db.User_Session.Attach(objSession);
+                    db.Entry(objSession).State = EntityState.Added;
+                    db.SaveChanges();
+
+                    objResponse.UserSession = objSession;
+                    objResponse.Message = "Success";
+                    objResponse.Status = "1";
 
                 }
 
