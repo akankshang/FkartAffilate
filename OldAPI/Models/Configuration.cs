@@ -20,5 +20,12 @@ namespace OldAPI.Models
 
         [StringLength(500)]
         public string Lookup_Value { get; set; }
+
+        public int User_Id { get; set; }
+    }
+
+    public class ConfigurationResponse :APIResponse
+    {
+        public List<Configuration> configurations { get; set; }
     }
 }

@@ -7,99 +7,81 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using OldAPI.Models;
 
 namespace OldAPI.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ConfigurationsController : ApiController
     {
         private ApplicationDBContext db = new ApplicationDBContext();
 
-        // GET: api/Configurations
-        public IQueryable<Configuration> GetConfigurations()
-        {
-            return db.Configurations;
-        }
-
-        // GET: api/Configurations/5
+      
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="LookupType"></param>
+       /// <param name="Login_Key"></param>
+       /// <param name="UserId"></param>
+       /// <returns></returns>
         [ResponseType(typeof(Configuration))]
-        public IHttpActionResult GetConfiguration(int id)
+        public ConfigurationResponse GetConfiguration(string LookupType, string Login_Key, int UserId)
         {
-            Configuration configuration = db.Configurations.Find(id);
-            if (configuration == null)
+            ConfigurationResponse objResponse = new ConfigurationResponse();
+            if (!string.IsNullOrEmpty(Login_Key))
             {
-                return NotFound();
-            }
 
-            return Ok(configuration);
+                objResponse.configurations = db.Configurations.Where(x => x.Lookup_Type == LookupType && x.User_Id == UserId).ToList();
+                objResponse.Message = objResponse.configurations.Count + " Configuration setting found";
+                objResponse.Status = "1";
+            }
+            else
+            {
+                objResponse.configurations = null;
+                objResponse.Message = "Invalid login key";
+                objResponse.Status = "0";
+            }
+            return objResponse;
         }
 
-        // PUT: api/Configurations/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutConfiguration(int id, Configuration configuration)
+    
+
+       
+        public APIResponse PostConfiguration(List<Configuration> configuration, string Login_Key, int UserId)
         {
-            if (!ModelState.IsValid)
+            APIResponse objResponse = new APIResponse();
+            if (!string.IsNullOrEmpty(Login_Key))
             {
-                return BadRequest(ModelState);
-            }
-
-            if (id != configuration.Lookup_ID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(configuration).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ConfigurationExists(id))
+                if (configuration != null)
                 {
-                    return NotFound();
+                    foreach (Configuration obj in configuration)
+                    {
+
+                        db.Configurations.Attach(obj);
+                        db.Entry(obj).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                    }
+                   
+
                 }
                 else
                 {
-                    throw;
+                    objResponse.Message = "Configuration list is null.";
+                    objResponse.Status = "0";
                 }
             }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/Configurations
-        [ResponseType(typeof(Configuration))]
-        public IHttpActionResult PostConfiguration(Configuration configuration)
-        {
-            if (!ModelState.IsValid)
+            else
             {
-                return BadRequest(ModelState);
+                objResponse.Message = "Invalid login key";
+                objResponse.Status = "0";
             }
-
-            db.Configurations.Add(configuration);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = configuration.Lookup_ID }, configuration);
+            return objResponse;
         }
 
-        // DELETE: api/Configurations/5
-        [ResponseType(typeof(Configuration))]
-        public IHttpActionResult DeleteConfiguration(int id)
-        {
-            Configuration configuration = db.Configurations.Find(id);
-            if (configuration == null)
-            {
-                return NotFound();
-            }
-
-            db.Configurations.Remove(configuration);
-            db.SaveChanges();
-
-            return Ok(configuration);
-        }
+     
 
         protected override void Dispose(bool disposing)
         {
