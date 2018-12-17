@@ -53,7 +53,7 @@ namespace OldAPI.Controllers
                 }
                 else
                 {
-                    objResponse.Message = "Login object is null. Please send valid API request.";
+                    objResponse.Message = "Invalid login credentials.";
                     objResponse.Status = "0";
                 }
 
