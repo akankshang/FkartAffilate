@@ -18,14 +18,14 @@ namespace OldAPI.Controllers
     {
         private ApplicationDBContext db = new ApplicationDBContext();
 
-      
-       /// <summary>
-       /// 
-       /// </summary>
-       /// <param name="LookupType"></param>
-       /// <param name="Login_Key"></param>
-       /// <param name="UserId"></param>
-       /// <returns></returns>
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="LookupType"></param>
+        /// <param name="Login_Key"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
         [ResponseType(typeof(Configuration))]
         public ConfigurationResponse GetConfiguration(string LookupType, string Login_Key, int UserId)
         {
@@ -46,9 +46,52 @@ namespace OldAPI.Controllers
             return objResponse;
         }
 
-    
+        [ResponseType(typeof(Configuration))]
+        public SubscriptionResponse GetSubscription(string Email, string Login_Key, int UserId)
+        {
+            SubscriptionResponse objResponse = new SubscriptionResponse();
+            if (!string.IsNullOrEmpty(Login_Key))
+            {
 
-       
+                objResponse.Subscription = db.Subscription.FirstOrDefault(x => x.Email == Email);
+                objResponse.Message = " Subscription found";
+                objResponse.Status = "1";
+            }
+            else
+            {
+                objResponse.Subscription = null;
+                objResponse.Message = "Invalid login key";
+                objResponse.Status = "0";
+            }
+            return objResponse;
+        }
+
+        public APIResponse PostSubscription(Subscription subscription, string Login_Key, int UserId)
+        {
+            APIResponse objResponse = new APIResponse();
+            if (!string.IsNullOrEmpty(Login_Key))
+            {
+                if (subscription != null)
+                {
+                    db.Subscription.Attach(subscription);
+                    db.Entry(subscription).State = EntityState.Added;
+                    db.SaveChanges();
+                }
+                else
+                {
+                    objResponse.Message = "Subscription is null.";
+                    objResponse.Status = "0";
+                }
+            }
+            else
+            {
+                objResponse.Message = "Invalid login key";
+                objResponse.Status = "0";
+            }
+            return objResponse;
+
+        }
+
         public APIResponse PostConfiguration(List<Configuration> configuration, string Login_Key, int UserId)
         {
             APIResponse objResponse = new APIResponse();
@@ -64,7 +107,7 @@ namespace OldAPI.Controllers
                         db.SaveChanges();
 
                     }
-                   
+
 
                 }
                 else
@@ -81,7 +124,7 @@ namespace OldAPI.Controllers
             return objResponse;
         }
 
-     
+
 
         protected override void Dispose(bool disposing)
         {

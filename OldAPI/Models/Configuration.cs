@@ -31,12 +31,12 @@ namespace OldAPI.Models
 
     public class SubscriptionResponse : APIResponse
     {
-        public List<Subscription> Subscription { get; set; }
+        public Subscription Subscription { get; set; }
     }
 
     public class SubscriptionRequest  
     {
-        public List<Subscription> Subscription { get; set; }
+        public Subscription Subscription { get; set; }
     }
 
     [Table("Subscription")]

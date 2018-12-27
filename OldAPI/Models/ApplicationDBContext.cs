@@ -15,7 +15,7 @@ namespace OldAPI.Models
         public virtual DbSet<Configuration> Configurations { get; set; }
         public virtual DbSet<User_Session> User_Session { get; set; }
         public virtual DbSet<User> Users { get; set; }
-
+        public virtual DbSet<Subscription> Subscription { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
         }
